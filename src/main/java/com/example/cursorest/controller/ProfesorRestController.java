@@ -62,7 +62,7 @@ public class ProfesorRestController {
 			return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
 		}
 	}
-	
+
 	/* Actualizar registro de profesor con consulta sql */
 	@PutMapping("/update_sql/{id}")
 	public ResponseEntity<?> updateProfesorSql(@PathVariable(value = "id") Long id, @RequestBody Profesor profesor) {
@@ -82,7 +82,6 @@ public class ProfesorRestController {
 			return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
 		}
 	}
-	
 
 	/* Borrar registro de un profesor */
 	@DeleteMapping("/delete/{id}")
@@ -101,11 +100,27 @@ public class ProfesorRestController {
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
 
+	@PostMapping("/deleteAll_post")
+	public ResponseEntity<Void> deleteProfesorPost(@RequestBody Profesor profesor) {
+
+		if (profesorService.findProfesor(profesor) != null) {
+			profesorService.deleteAllProfesor();
+			return new ResponseEntity<Void>(HttpStatus.OK);
+		}
+		return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+	}
+
 	/* Borrar todos los profesores */
 	@DeleteMapping("/delete")
-	public ResponseEntity<Void> deleteProfesorAll() {
-		profesorService.deleteAllProfesor();
-		return new ResponseEntity<Void>(HttpStatus.OK);
+	public ResponseEntity<Void> deleteProfesorAll(@RequestBody Profesor profesor) {
+			/*profesorService.deleteAllProfesor();
+			return new ResponseEntity<Void>(HttpStatus.OK);*/
+		if (profesorService.findProfesor(profesor) != null) {
+			profesorService.deleteAllProfesor();
+			return new ResponseEntity<Void>(HttpStatus.OK);
+		}
+		return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+		
 	}
 
 }
