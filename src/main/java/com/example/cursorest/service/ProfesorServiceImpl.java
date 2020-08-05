@@ -45,7 +45,7 @@ public class ProfesorServiceImpl implements IProfesorService {
 
 	@Override
 	@Transactional
-	public Profesor uptadeProfesor(Profesor profesor) {
+	public Profesor updateProfesor(Profesor profesor) {
 		return (Profesor)profesorDao.save(profesor);
 	}
 

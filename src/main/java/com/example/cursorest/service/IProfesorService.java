@@ -17,7 +17,7 @@ public List<Profesor> findAll();
 	
 	public void deleteProfesor(Profesor profesor);
 	
-	public Profesor uptadeProfesor(Profesor profesor);
+	public Profesor updateProfesor(Profesor profesor);
 	
 	public Optional<Profesor> findProfesorById(Long profesor_id);
 	

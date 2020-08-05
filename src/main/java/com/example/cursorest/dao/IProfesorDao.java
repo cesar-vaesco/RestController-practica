@@ -9,7 +9,9 @@ import com.example.cursorest.entity.Profesor;
 
 public interface IProfesorDao extends JpaRepository<Profesor, Long>{
 
-public Profesor findByEmail(String email);
+	
+	/** Busquedas personalizadas */
+	public Profesor findByEmail(String email);
 	
 	public Profesor findByEmailAndPassword(String email, String password);
 	

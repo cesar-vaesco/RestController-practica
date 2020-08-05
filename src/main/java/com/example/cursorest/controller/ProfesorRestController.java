@@ -55,13 +55,34 @@ public class ProfesorRestController {
 			profesorDB.setNombre(profesor.getNombre());
 			profesorDB.setEmail(profesor.getEmail());
 			// mandar la actualización a la base de datos
-			profesorService.uptadeProfesor(profesorDB);
+			profesorService.updateProfesor(profesorDB);
 			// Retornar respuestas actualización o profesor no encontrado
 			return new ResponseEntity<>(profesorDB, HttpStatus.OK);
 		} else {
 			return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
 		}
 	}
+	
+	/* Actualizar registro de profesor con consulta sql */
+	@PutMapping("/update_sql/{id}")
+	public ResponseEntity<?> updateProfesorSql(@PathVariable(value = "id") Long id, @RequestBody Profesor profesor) {
+		// Inicializando profesor
+		Profesor profesorDB = null;
+		profesorDB = profesorService.findByIdSQL(id);
+		// Confirmar que existe el profesor
+		if (profesorDB != null) {
+			// Datos que se van a autualizar
+			profesorDB.setNombre(profesor.getNombre());
+			profesorDB.setEmail(profesor.getEmail());
+			// mandar la actualización a la base de datos
+			profesorService.updateProfesor(profesorDB);
+			// Retornar respuestas actualización o profesor no encontrado
+			return new ResponseEntity<>(profesorDB, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+		}
+	}
+	
 
 	/* Borrar registro de un profesor */
 	@DeleteMapping("/delete/{id}")
