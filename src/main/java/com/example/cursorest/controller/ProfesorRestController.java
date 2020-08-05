@@ -32,6 +32,22 @@ public class ProfesorRestController {
 		return profesorService.findAll();
 	}
 
+	/* Buscar un profesor 
+	 *
+	 * En el cuerpo de la busqueda se pasa el correo del usaurio y cómo respuesta se recibe objeto completo con sus datos
+	 **/
+	@PostMapping("/findProfesor")
+	public ResponseEntity<?> getProfesor(@RequestBody Profesor profesor){
+		Profesor profesorDB = profesorService.findProfesor(profesor);
+		if (profesorDB != null) {
+			return new ResponseEntity<>(profesorDB,HttpStatus.OK);
+		}else {
+			return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+		}
+	}
+	
+	
+
 	/* Crear - agregar un nuevo profesor */
 	@PostMapping("/sign_up")
 	public ResponseEntity<Void> addProfesor(@RequestBody Profesor profesor) {
@@ -113,14 +129,16 @@ public class ProfesorRestController {
 	/* Borrar todos los profesores */
 	@DeleteMapping("/delete")
 	public ResponseEntity<Void> deleteProfesorAll(@RequestBody Profesor profesor) {
-			/*profesorService.deleteAllProfesor();
-			return new ResponseEntity<Void>(HttpStatus.OK);*/
+		/*
+		 * profesorService.deleteAllProfesor(); return new
+		 * ResponseEntity<Void>(HttpStatus.OK);
+		 */
 		if (profesorService.findProfesor(profesor) != null) {
 			profesorService.deleteAllProfesor();
 			return new ResponseEntity<Void>(HttpStatus.OK);
 		}
 		return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
-		
+
 	}
 
 }
