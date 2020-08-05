@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,21 +33,21 @@ public class ProfesorRestController {
 		return profesorService.findAll();
 	}
 
-	/* Buscar un profesor 
+	/*
+	 * Buscar un profesor
 	 *
-	 * En el cuerpo de la busqueda se pasa el correo del usaurio y cómo respuesta se recibe objeto completo con sus datos
+	 * En el cuerpo de la busqueda se pasa el correo del usaurio y cómo respuesta se
+	 * recibe objeto completo con sus datos
 	 **/
 	@PostMapping("/findProfesor")
-	public ResponseEntity<?> getProfesor(@RequestBody Profesor profesor){
+	public ResponseEntity<?> getProfesor(@RequestBody Profesor profesor) {
 		Profesor profesorDB = profesorService.findProfesor(profesor);
 		if (profesorDB != null) {
-			return new ResponseEntity<>(profesorDB,HttpStatus.OK);
-		}else {
+			return new ResponseEntity<>(profesorDB, HttpStatus.OK);
+		} else {
 			return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
 		}
 	}
-	
-	
 
 	/* Crear - agregar un nuevo profesor */
 	@PostMapping("/sign_up")
@@ -58,6 +59,31 @@ public class ProfesorRestController {
 			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
 		}
 	}
+	
+	
+	/*
+	 * public Profesor findByEmailAndPassword(String email, String password); -> dao
+	 *
+	 * public Profesor checkProfesorLogin(Profesor profesor); -> service
+	 *
+	 * @Override
+	 * @Transactional(readOnly = true) public Profesor checkProfesorLogin(Profesor
+	 * profesor) { return (Profesor)
+	 * profesorDao.findByEmailAndPassword(profesor.getEmail(),
+	 * profesor.getPassword()); }   -> ProfesorServiceImpl
+	 */
+
+	/* Método que valida acceso */
+	@PostMapping("/login")
+	public ResponseEntity<?> loginProfesor(@RequestBody Profesor profesor) {
+		
+		Profesor profesorDB = profesorService.checkProfesorLogin(profesor);
+		if (profesorDB != null) {
+			return new ResponseEntity<>(profesorDB, HttpStatus.OK);
+		}
+		return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+	}
+	
 
 	/* Actualizar registro de profesor */
 	@PutMapping("/update/{id}")
