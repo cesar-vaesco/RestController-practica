@@ -64,16 +64,26 @@ public class ProfesorRestController {
 	}
 
 	/* Borrar registro de un profesor */
-
 	@DeleteMapping("/delete/{id}")
 	public ResponseEntity<Void> deleteProfesor(@PathVariable(value = "id") Long id) {
-		/*Para corroborar que no existe el profesor y dar una respuesta a la prtición*/
+		/*
+		 * Para corroborar que no existe el profesor y dar una respuesta a la petición
+		 */
 		Profesor profesorDB = profesorService.findById(id);
 		if (profesorDB == null) {
 			return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
 		}
-		/*Al corroborar que el profesor existe entonces se ejecuta el siguiente código*/
+		/*
+		 * Al corroborar que el profesor existe entonces se ejecuta el siguiente código
+		 */
 		profesorService.deleteProfesor(id);
+		return new ResponseEntity<Void>(HttpStatus.OK);
+	}
+
+	/* Borrar todos los profesores */
+	@DeleteMapping("/delete")
+	public ResponseEntity<Void> deleteProfesorAll() {
+		profesorService.deleteAllProfesor();
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
 
