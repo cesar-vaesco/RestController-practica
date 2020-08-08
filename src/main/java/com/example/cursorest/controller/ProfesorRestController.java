@@ -1,5 +1,6 @@
 package com.example.cursorest.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.cursorest.entity.Profesor;
+import com.example.cursorest.mapper.Mapper;
+import com.example.cursorest.model.MProfesor;
 import com.example.cursorest.service.IProfesorService;
 
 @RestController
@@ -79,7 +82,11 @@ public class ProfesorRestController {
 		
 		Profesor profesorDB = profesorService.checkProfesorLogin(profesor);
 		if (profesorDB != null) {
-			return new ResponseEntity<>(profesorDB, HttpStatus.OK);
+			List<Profesor> profesores = new ArrayList<>();
+			profesores.add(profesorDB);
+			List<MProfesor> mProfesores = new ArrayList<>();
+			mProfesores = Mapper.convertirLista(profesores);
+			return new ResponseEntity<>(mProfesores, HttpStatus.OK);
 		}
 		return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
 	}
