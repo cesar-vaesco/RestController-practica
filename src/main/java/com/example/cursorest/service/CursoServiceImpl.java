@@ -3,11 +3,13 @@ package com.example.cursorest.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.cursorest.dao.ICursoDao;
 import com.example.cursorest.entity.Curso;
 
+@Service
 public class CursoServiceImpl implements ICursoService {
 
 	@Autowired
@@ -27,9 +29,9 @@ public class CursoServiceImpl implements ICursoService {
 	}
 
 	@Override
-	public List<Curso> getCursoProfesor(Long id) {
-		
-		return (List<Curso>) cursoDao.findByProfesorID(id);
+	@Transactional(readOnly = true)
+	public List<Curso> getCursosProfesor(Long id) {
+		return (List<Curso>) cursoDao.findByProfesorId(id);
 	}
 
 }

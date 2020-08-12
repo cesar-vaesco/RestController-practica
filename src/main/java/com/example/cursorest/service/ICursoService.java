@@ -11,5 +11,5 @@ public interface ICursoService {
 
 	public void saveCurso(Curso curso);
 
-	public List<Curso> getCursoProfesor(Long id);
+	public List<Curso> getCursosProfesor(Long id);
 }

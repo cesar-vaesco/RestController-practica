@@ -9,6 +9,6 @@ import com.example.cursorest.entity.Curso;
 public interface ICursoDao extends JpaRepository<Curso, Long> {
 
 	
-	public List<Curso> findByProfesorID(Long id);
+	public List<Curso> findByProfesorId(Long id);
 	
 }
