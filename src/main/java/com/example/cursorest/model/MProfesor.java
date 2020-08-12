@@ -21,6 +21,9 @@ public class MProfesor {
 		this.foto = foto;
 	}
 
+	/*Es el constructor que se va a mandar a la clase mapper para 
+	 * evitar mandar el password cuando se manda llamar los datos 
+	 * de un profesor*/
 	public MProfesor(Profesor profesor) {
 		this.id = profesor.getId();
 		this.nombre = profesor.getNombre();

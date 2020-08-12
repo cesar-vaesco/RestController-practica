@@ -1,13 +1,18 @@
 package com.example.cursorest.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -36,13 +41,22 @@ public class Profesor implements Serializable {
 	@Temporal(TemporalType.DATE)
 	private Date createAt;
 
-	/* Método que permite asignar la fecha de creación de un objeto*/
+	/*@OneToMany:  Un profesor va a tener n numero de cursos asociados */
+	@OneToMany(cascade = CascadeType.ALL) 
+	// Al borrar al profesor se borran en automatico los cursos añadidos a el
+	@JoinColumn(name = "profesor_id", referencedColumnName = "id")
+	// Hace referencia a la columna a la cúal estara asociada con la entidad Curso
+	private List<Curso> curso = new ArrayList<>();
+	//Todo curso creado sera agregado a una array list
+
+	/* Método que permite asignar la fecha de creación de un objeto */
 	@PrePersist
 	public void prePersist() {
 		createAt = new Date();
 	}
 
-	/*Sección de getters y setters*/
+	/* Sección de getters y setters */
+
 	public Long getId() {
 		return id;
 	}
@@ -89,6 +103,14 @@ public class Profesor implements Serializable {
 
 	public void setCreateAt(Date createAt) {
 		this.createAt = createAt;
+	}
+
+	public List<Curso> getCurso() {
+		return curso;
+	}
+
+	public void setCurso(List<Curso> curso) {
+		this.curso = curso;
 	}
 
 	private static final long serialVersionUID = 1L;

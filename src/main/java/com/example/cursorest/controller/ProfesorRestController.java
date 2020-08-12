@@ -2,6 +2,7 @@ package com.example.cursorest.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,7 +30,9 @@ public class ProfesorRestController {
 	@Autowired
 	private IProfesorService profesorService;
 
-	/* Ver - listar */
+	/*
+	 * Ver - listar URL: http://localhost:8040/api/profesores
+	 */
 	@GetMapping("/profesores")
 	@ResponseStatus(value = HttpStatus.OK)
 	public List<Profesor> getProfesores() {
@@ -37,9 +40,24 @@ public class ProfesorRestController {
 	}
 
 	/*
-	 * Buscar un profesor
-	 *
-	 * En el cuerpo de la busqueda se pasa el correo del usaurio y cómo respuesta se
+	 * URL: http://localhost:8040/api/profesor/13
+	 */
+	@GetMapping("/profesor/{id}")
+	public ResponseEntity<Profesor> getProfesorId(@PathVariable(value = "id") Long id) {
+		Optional<Profesor> optionalProfesor = profesorService.findProfesorById(id);
+
+		if (optionalProfesor.isPresent()) {
+			return ResponseEntity.ok(optionalProfesor.get());
+		} else {
+			return ResponseEntity.noContent().build();
+		}
+
+	}
+
+	/*
+	 * Buscar un profesor URL: http://localhost:8040/api/findProfesor
+	 * 
+	 * En el cuerpo de la busqueda se pasa el correo del usuario y cómo respuesta se
 	 * recibe objeto completo con sus datos
 	 **/
 	@PostMapping("/findProfesor")
@@ -52,7 +70,14 @@ public class ProfesorRestController {
 		}
 	}
 
-	/* Crear - agregar un nuevo profesor */
+	/*
+	 * Crear - agregar un nuevo profesor
+	 * 
+	 * URL: http://localhost:8040/api/sign_up
+	 * 
+	 * Cuerpo del objeto que se envía { "nombre":"mar", "email": "mar@jos.com",
+	 * "password":"var" }
+	 */
 	@PostMapping("/sign_up")
 	public ResponseEntity<Void> addProfesor(@RequestBody Profesor profesor) {
 		if (profesorService.findProfesor(profesor) == null) {
@@ -62,27 +87,41 @@ public class ProfesorRestController {
 			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
 		}
 	}
-	
-	
+
 	/*
 	 * public Profesor findByEmailAndPassword(String email, String password); -> dao
 	 *
 	 * public Profesor checkProfesorLogin(Profesor profesor); -> service
 	 *
 	 * @Override
+	 * 
 	 * @Transactional(readOnly = true) public Profesor checkProfesorLogin(Profesor
 	 * profesor) { return (Profesor)
 	 * profesorDao.findByEmailAndPassword(profesor.getEmail(),
-	 * profesor.getPassword()); }   -> ProfesorServiceImpl
+	 * profesor.getPassword()); } -> ProfesorServiceImpl
 	 */
 
-	/* Método que valida acceso */
+	/*
+	 * Método que valida acceso
+	 * 
+	 * http://localhost:8040/api/login
+	 * 
+	 * Datos para generar acceso
+	 * 
+	 * {"email": "mar@jos.com", "password":"var" }
+	 * 
+	 */
 	@PostMapping("/login")
 	public ResponseEntity<?> loginProfesor(@RequestBody Profesor profesor) {
-		
+
 		Profesor profesorDB = profesorService.checkProfesorLogin(profesor);
 		if (profesorDB != null) {
+			/* Profesor de entity es recorrido */
 			List<Profesor> profesores = new ArrayList<>();
+			/*
+			 * Al haber usuario y contraseña se agrega el profesor de base de datos al
+			 * arreglo profesores
+			 */
 			profesores.add(profesorDB);
 			List<MProfesor> mProfesores = new ArrayList<>();
 			mProfesores = Mapper.convertirLista(profesores);
@@ -90,25 +129,28 @@ public class ProfesorRestController {
 		}
 		return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
 	}
-	
 
-	/* Actualizar registro de profesor */
+	/*
+	 * Actualizar registro de profesor URL: http://localhost:8040/api/update/{id}
+	 */
 	@PutMapping("/update/{id}")
-	public ResponseEntity<?> updateProfesor(@PathVariable(value = "id") Long id, @RequestBody Profesor profesor) {
-		// Inicializando profesor
-		Profesor profesorDB = null;
-		profesorDB = profesorService.findById(id);
+	public ResponseEntity<Profesor> updateProfesor(@PathVariable(value = "id") Long id,
+			@RequestBody Profesor profesor) {
+		Optional<Profesor> optionalProfesor = profesorService.findById(id);
 		// Confirmar que existe el profesor
-		if (profesorDB != null) {
+		if (optionalProfesor.isPresent()) {
 			// Datos que se van a autualizar
-			profesorDB.setNombre(profesor.getNombre());
-			profesorDB.setEmail(profesor.getEmail());
+			Profesor updateProfesor = optionalProfesor.get();
+			updateProfesor.setNombre(profesor.getNombre());
+			updateProfesor.setEmail(profesor.getEmail());
+			// ->profesorDB.setNombre(profesor.getNombre());
+			// ->profesorDB.setEmail(profesor.getEmail());
 			// mandar la actualización a la base de datos
-			profesorService.updateProfesor(profesorDB);
+			profesorService.updateProfesor(updateProfesor);
 			// Retornar respuestas actualización o profesor no encontrado
-			return new ResponseEntity<>(profesorDB, HttpStatus.OK);
+			return ResponseEntity.ok(updateProfesor);
 		} else {
-			return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+			return ResponseEntity.noContent().build();
 		}
 	}
 
@@ -132,21 +174,13 @@ public class ProfesorRestController {
 		}
 	}
 
-	/* Borrar registro de un profesor */
 	@DeleteMapping("/delete/{id}")
-	public ResponseEntity<Void> deleteProfesor(@PathVariable(value = "id") Long id) {
-		/*
-		 * Para corroborar que no existe el profesor y dar una respuesta a la petición
-		 */
-		Profesor profesorDB = profesorService.findById(id);
-		if (profesorDB == null) {
-			return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+	public ResponseEntity<Profesor> deleteProfe(@PathVariable(value = "id") Long id) {
+		Optional<Profesor> deleteProfesor = profesorService.findById(id);
+		if (deleteProfesor.isPresent()) {
+			profesorService.deleteProfesor(id);
 		}
-		/*
-		 * Al corroborar que el profesor existe entonces se ejecuta el siguiente código
-		 */
-		profesorService.deleteProfesor(id);
-		return new ResponseEntity<Void>(HttpStatus.OK);
+		return ResponseEntity.noContent().build();
 	}
 
 	@PostMapping("/deleteAll_post")
