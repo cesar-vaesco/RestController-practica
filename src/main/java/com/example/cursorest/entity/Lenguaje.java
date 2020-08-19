@@ -33,7 +33,7 @@ public class Lenguaje implements Serializable {
 
 	/* Crear la relación muchos a muchos */
 	@ManyToMany
-	@JoinTable(name = "profesores lenguajes", 
+	@JoinTable(name = "profesores_lenguajes", 
 	           joinColumns = @JoinColumn(name = "lenguaje_id", referencedColumnName = "id"), 
 	           inverseJoinColumns = @JoinColumn(name = "profesor_id", referencedColumnName = "id"))
 	private Set<Profesor> profesor = new HashSet<Profesor>();

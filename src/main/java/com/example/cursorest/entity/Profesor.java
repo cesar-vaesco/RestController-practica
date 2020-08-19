@@ -3,7 +3,9 @@ package com.example.cursorest.entity;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -12,11 +14,16 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 @Table(name = "profesores")
@@ -49,6 +56,13 @@ public class Profesor implements Serializable {
 	private List<Curso> curso = new ArrayList<>();
 	//Todo curso creado sera agregado a una array list
 
+	/*Actualizar la relación para poder relacionar muchos a muchos*/
+	@ManyToMany(cascade = CascadeType.ALL)
+	@JsonBackReference
+	@JoinTable(name="profesores_lenguajes", 
+	            joinColumns = @JoinColumn(name = "profesor_id", referencedColumnName = "id"),
+	            inverseJoinColumns = @JoinColumn(name="lenguaje_id",referencedColumnName = "id"))
+	private Set<Lenguaje> lenguajes = new HashSet<Lenguaje>();
 	/* Método que permite asignar la fecha de creación de un objeto */
 	@PrePersist
 	public void prePersist() {
