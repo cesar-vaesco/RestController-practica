@@ -11,5 +11,5 @@ public interface ILenguajeService {
 	
 	public void saveLenguaje(Lenguaje lenguaje);
 	
-	public  Lenguaje FindLenguajeById(Long id);
+	public Lenguaje findLenguajeById(Long id);
 }

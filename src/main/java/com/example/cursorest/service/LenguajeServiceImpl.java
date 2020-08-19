@@ -4,12 +4,13 @@ import java.util.List;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.cursorest.dao.ILenguajeDao;
 import com.example.cursorest.entity.Lenguaje;
 
-
+@Service
 public class LenguajeServiceImpl implements ILenguajeService {
 
 	@Autowired
@@ -29,7 +30,7 @@ public class LenguajeServiceImpl implements ILenguajeService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public Lenguaje FindLenguajeById(Long id) {
+	public Lenguaje findLenguajeById(Long id) {
 		return lenguajeDao.findByIdSQL(id);
 	}
 	
