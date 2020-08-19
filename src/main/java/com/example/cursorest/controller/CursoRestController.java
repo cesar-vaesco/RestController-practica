@@ -38,21 +38,48 @@ public class CursoRestController {
 			} else {
 				return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 			}
-		}else {
+		} else {
 			return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 		}
-	} 
-	
-	
+	}
+
+	/*
+	 * URL: http://localhost:8040/api/crear_curso
+	 * 
+	 * Cuerpo de petición:
+	 * 
+	 * { "nombre":"Curso C#", "profesorId":"14"}
+	 * 
+	 * El curso se guarda en el ID del profesor  
+	 *   
+	 *  Al consultar al profesor se genera una respuesta similar a: 
+	 *   
+	 *    {
+        "id": 14,
+        "nombre": "César",
+        "email": "ces@ces.com",
+        "password": "ces",
+        "foto": null,
+        "createAt": "2020-08-05",
+        "curso": [
+            {
+                "curso_id": 4,
+                "nombre": "Curso C#",
+                "profesorId": 14
+            }
+        ]
+    },
+	 **/
+
 	@PostMapping("/crear_curso")
-	public ResponseEntity<?> agregarCurso(@RequestBody Curso curso){
+	public ResponseEntity<?> agregarCurso(@RequestBody Curso curso) {
 		cursoService.saveCurso(curso);
 		return new ResponseEntity<Void>(HttpStatus.CREATED);
-		
+
 	}
-	
+
 	@PostMapping("/cursos_profesor")
-	public ResponseEntity<?> verCursosProfesor (@RequestBody Profesor profesor){
+	public ResponseEntity<?> verCursosProfesor(@RequestBody Profesor profesor) {
 		List<Curso> listaCursos = cursoService.getCursosProfesor(profesor.getId());
 		if (listaCursos != null) {
 			if (listaCursos.size() != 0) {
@@ -60,11 +87,9 @@ public class CursoRestController {
 			} else {
 				return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 			}
-		}else {
+		} else {
 			return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 		}
 	}
-	
 
 }// Fin de la clase
-
