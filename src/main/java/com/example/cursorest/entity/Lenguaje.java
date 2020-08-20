@@ -13,12 +13,15 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+
 
 @Entity
-@Table(name = "lenguaje")
+@Table(name = "lenguajes")
 public class Lenguaje implements Serializable {
 
 	@Id
@@ -27,17 +30,24 @@ public class Lenguaje implements Serializable {
 
 	private String nombre;
 
-	@Column(name = "date")
-	@JsonFormat(pattern = "yyyy-MM-dd")
+	@Column(name ="date")
+	@Temporal(TemporalType.DATE)
 	private Date date;
 
 	/* Crear la relación muchos a muchos */
 	@ManyToMany
-	@JoinTable(name = "profesores_lenguajes", 
-	           joinColumns = @JoinColumn(name = "lenguaje_id", referencedColumnName = "id"), 
-	           inverseJoinColumns = @JoinColumn(name = "profesor_id", referencedColumnName = "id"))
+	@JoinTable(name = "profesores_lenguajes",
+			   joinColumns = @JoinColumn(name = "lenguaje_id", referencedColumnName = "id"),
+			inverseJoinColumns = @JoinColumn(name = "profesor_id", referencedColumnName = "id"))
 	private Set<Profesor> profesor = new HashSet<Profesor>();
 
+	
+	/* Método que permite asignar la fecha de creación de un objeto */
+	@PrePersist
+	public void prePersist() {
+		date = new Date();
+	}
+	
 	public long getId() {
 		return id;
 	}

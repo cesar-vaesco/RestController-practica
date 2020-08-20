@@ -14,7 +14,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
@@ -126,6 +125,20 @@ public class Profesor implements Serializable {
 	public void setCurso(List<Curso> curso) {
 		this.curso = curso;
 	}
+	
+
+	public Set<Lenguaje> getLenguajes() {
+		return lenguajes;
+	}
+
+	public void setLenguajes(Set<Lenguaje> lenguajes) {
+		this.lenguajes = lenguajes;
+	}
+
+	public void addLenguaje(Lenguaje lenguaje) {
+		this.lenguajes.add(lenguaje);
+	}
+
 
 	private static final long serialVersionUID = 1L;
 

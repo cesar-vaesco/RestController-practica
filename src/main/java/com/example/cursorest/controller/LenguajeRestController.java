@@ -21,6 +21,10 @@ public class LenguajeRestController {
 	@Autowired
 	private ILenguajeService lenguajeService;
 	
+	
+	/**
+	 * URL de consulta:http://localhost:8040/api/lenguajes
+	 * */
 	@GetMapping("/lenguajes")
 	public ResponseEntity<?> listaLenguajes(){
 		List <Lenguaje> listaLenguajes = lenguajeService.findAll();
@@ -30,10 +34,17 @@ public class LenguajeRestController {
 				}
 			}
 			
-			return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 	}
 	
-	@PostMapping("/crear-lenguaje")
+	/**
+	 * URL de creación de lenguaje:http://localhost:8040/api/crear-lenguaje
+	 * 
+	 * Cuerpo de la creación:  {
+  								"nombre":"Java"
+							    }
+	 * */
+	@PostMapping("/crear_lenguaje")
 	public ResponseEntity<?> agregarLenguaje(@RequestBody Lenguaje lenguaje){
 		lenguajeService.saveLenguaje(lenguaje);
 		return new ResponseEntity<Void>(HttpStatus.CREATED);

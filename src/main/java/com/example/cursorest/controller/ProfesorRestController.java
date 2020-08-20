@@ -133,21 +133,18 @@ public class ProfesorRestController {
 	 * Actualizar registro de profesor URL: http://localhost:8040/api/update/{id}
 	 */
 	@PutMapping("/update/{id}")
-	public ResponseEntity<Profesor> updateProfesor(@PathVariable(value = "id") Long id,
-			@RequestBody Profesor profesor) {
-		Optional<Profesor> optionalProfesor = profesorService.findById(id);
+	public ResponseEntity<?> updateProfesor(@PathVariable(value = "id") Long id,@RequestBody Profesor profesor) {
+		Profesor profesorDB = null;
+		 profesorDB = profesorService.findById(id);
 		// Confirmar que existe el profesor
-		if (optionalProfesor.isPresent()) {
-			// Datos que se van a autualizar
-			Profesor updateProfesor = optionalProfesor.get();
-			updateProfesor.setNombre(profesor.getNombre());
-			updateProfesor.setEmail(profesor.getEmail());
-			// ->profesorDB.setNombre(profesor.getNombre());
-			// ->profesorDB.setEmail(profesor.getEmail());
+		if (profesorDB != null) {
+			
+			profesorDB.setNombre(profesor.getNombre());
+		    profesorDB.setEmail(profesor.getEmail());
 			// mandar la actualización a la base de datos
-			profesorService.updateProfesor(updateProfesor);
+			profesorService.updateProfesor(profesorDB);
 			// Retornar respuestas actualización o profesor no encontrado
-			return ResponseEntity.ok(updateProfesor);
+			return new ResponseEntity<>(profesorDB, HttpStatus.OK);
 		} else {
 			return ResponseEntity.noContent().build();
 		}
@@ -174,12 +171,9 @@ public class ProfesorRestController {
 	}
 
 	@DeleteMapping("/delete/{id}")
-	public ResponseEntity<Profesor> deleteProfe(@PathVariable(value = "id") Long id) {
-		Optional<Profesor> deleteProfesor = profesorService.findById(id);
-		if (deleteProfesor.isPresent()) {
-			profesorService.deleteProfesor(id);
-		}
-		return ResponseEntity.noContent().build();
+	public ResponseEntity<Void> deleteProfesor(@PathVariable(value="id")Long id){
+		profesorService.deleteProfesor(id);
+		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
 
 	@PostMapping("/deleteAll_post")

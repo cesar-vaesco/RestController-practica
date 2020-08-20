@@ -62,8 +62,8 @@ public class ProfesorServiceImpl implements IProfesorService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public Optional<Profesor> findById(Long id) {
-		return (Optional<Profesor>)profesorDao.findById(id);
+	public Profesor findById(Long id) {
+		return profesorDao.findById(id).orElse(null);
 	}
 
 	@Override
